@@ -1,0 +1,8 @@
+pymongo
+bcrypt
+pystac-client
+odc-stac
+odc-algo
+pdfkit
+schedule
+mailjet_rest
