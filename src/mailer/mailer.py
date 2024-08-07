@@ -21,7 +21,7 @@ class Mailer:
         item = images["item"]
         products_items = ''
         items_content = ''
-        main_template = f"""
+        main_template = """
         <h1 style="color: #5e9ca0;">Weekly Report</h1>
         <h2 style="color: #2e6c80;">You have a products this week :)</h2>
         <p>There is an available product within the pre-specified area for you to download. <br />Below you have your report about this product.&nbsp;</p>

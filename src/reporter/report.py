@@ -26,7 +26,7 @@ class Reporter():
             self.db = self.client[config.DB_NAME]
             self.collection = self.db[config.DB_COLLECTION]
         except Exception as e:
-            raise(Exception)
+            raise(e)
 
     def lookup(self, user):
         api = Client.open("https://earth-search.aws.element84.com/v1")
@@ -37,9 +37,8 @@ class Reporter():
         limit = 5,
         collections = "sentinel-2-l2a",
         intersects = user["geometry"],
-        datetime = f"{date}/2024-03-10",
+        datetime = f"{date}/{datetime.now().strftime('%Y-%m-%dT')}",
         )
-
         if search.matched() > 0 :
           return self.download_images(search, user)
         else:
@@ -50,6 +49,7 @@ class Reporter():
       data = load(item.items() ,geopolygon=geom, chunks={})
       ndvi = (data.nir - data.red) / (data.nir + data.red)
       rgba = to_rgba(data, bands=( "red", "green","blue" ),clamp=(1, 3000))
+      swir = data.swir22
 
       for t in range(len(data.time)):
         _ndvi = ndvi.isel(time=t).compute()
@@ -57,7 +57,6 @@ class Reporter():
         plt.imsave(ndvi_image_data, _ndvi, format="png", cmap="RdYlGn", vmin=-1, vmax=1)
         ndvi_image_data.seek(0)
 
-        swir = data.swir22
         _swir = swir.isel(time=t).compute().astype('float64')
 
         swir_image_data = BytesIO()
